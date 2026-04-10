@@ -1,0 +1,3 @@
+[submodule "zig-sti"]
+	path = zig-sti
+	url = https://github.com/timeolord/zig-sti
