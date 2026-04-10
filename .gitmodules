@@ -1,6 +1,0 @@
-[submodule "zig-sti"]
-	path = deps/zig-sti
-	url = https://github.com/timeolord/zig-sti
-[submodule "raylib-zig"]
-	path = deps/raylib-zig
-	url = https://github.com/timeolord/raylib-zig

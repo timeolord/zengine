@@ -1,8 +1,0 @@
-.direnv
-zig-out
-.zig-cache
-.zig-global-cache
-*~*
-*\#*
-vgcore.*
-test_serial
