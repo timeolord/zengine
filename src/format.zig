@@ -1,71 +1,20 @@
-const sti = @import("sti.zig");
+const std = @import("std");
 const rl = @import("raylib");
 
-const Allocator = sti.Memory.Allocator;
+pub const base_screen_height = 1080;
 
-pub fn append_fmt(allocator: Allocator, string: *sti.ArrayList(u8), comptime format: []const u8, args: anytype) !void {
-    const s = try sti.fmt.allocPrint(allocator.to_std(), format, args);
-    defer allocator.free(s);
-    try string.extend_from_slice(allocator, s);
+pub fn scale(value: u32) i32 {
+    const screen_height = @max(rl.getScreenHeight(), 1);
+    const ratio = @as(f32, @floatFromInt(screen_height)) / @as(f32, @floatFromInt(base_screen_height));
+    return @intFromFloat(@round(@as(f32, @floatFromInt(value)) * ratio));
 }
 
-pub fn count_wrapped_lines(allocator: Allocator, text: []const u8, font_size: i32, max_width: i32) !usize {
-    var line_buf: sti.ArrayList(u8) = .init();
-    defer line_buf.deinit(allocator);
-
-    var lines: usize = 0;
-    var start: usize = 0;
-    while (start < text.len) {
-        var end = start;
-        var last_space = start;
-        while (end < text.len) {
-            if (text[end] == ' ') last_space = end;
-            line_buf.clear();
-            try line_buf.extend_from_slice(allocator, text[start .. end + 1]);
-            try line_buf.push(allocator, 0);
-            const ms: [:0]const u8 = @ptrCast(line_buf.as_slice()[0 .. end - start + 1]);
-            if (rl.measureText(ms, font_size) > max_width and last_space > start) {
-                end = last_space;
-                break;
-            }
-            end += 1;
-        }
-        lines += 1;
-        start = end;
-        if (start < text.len and text[start] == ' ') start += 1;
-    }
-    return lines;
+pub fn unscale(value: i32) u32 {
+    const screen_height = @max(rl.getScreenHeight(), 1);
+    const ratio = @as(f32, @floatFromInt(base_screen_height)) / @as(f32, @floatFromInt(screen_height));
+    return @intFromFloat(@round(@as(f32, @floatFromInt(value)) * ratio));
 }
 
-pub fn draw_wrapped_text(allocator: Allocator, text: []const u8, x: i32, start_y: i32, font_size: i32, max_width: i32, line_spacing: i32, color: rl.Color) !i32 {
-    var line_buf: sti.ArrayList(u8) = .init();
-    defer line_buf.deinit(allocator);
-
-    var y = start_y;
-    var start: usize = 0;
-    while (start < text.len) {
-        var end = start;
-        var last_space = start;
-        while (end < text.len) {
-            if (text[end] == ' ') last_space = end;
-            line_buf.clear();
-            try line_buf.extend_from_slice(allocator, text[start .. end + 1]);
-            try line_buf.push(allocator, 0);
-            const ms: [:0]const u8 = @ptrCast(line_buf.as_slice()[0 .. end - start + 1]);
-            if (rl.measureText(ms, font_size) > max_width and last_space > start) {
-                end = last_space;
-                break;
-            }
-            end += 1;
-        }
-        line_buf.clear();
-        try line_buf.extend_from_slice(allocator, text[start..end]);
-        try line_buf.push(allocator, 0);
-        const ds: [:0]const u8 = @ptrCast(line_buf.as_slice()[0 .. end - start]);
-        rl.drawText(ds, x, y, font_size, color);
-        y += font_size + line_spacing;
-        start = end;
-        if (start < text.len and text[start] == ' ') start += 1;
-    }
-    return y;
+pub fn print_z(buffer: []u8, comptime fmt: []const u8, args: anytype) ![:0]const u8 {
+    return std.fmt.bufPrintZ(buffer, fmt, args);
 }

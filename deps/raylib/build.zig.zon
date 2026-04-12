@@ -1,0 +1,26 @@
+.{
+    .name = .raylib,
+    .version = "5.6.0-dev",
+    .minimum_zig_version = "0.15.1",
+
+    .fingerprint = 0x13035e5cb8bc1ac2, // Changing this has security and trust implications.
+
+    .dependencies = .{
+        .xcode_frameworks = .{
+            .url = "git+https://github.com/hexops/xcode-frameworks#9a45f3ac977fd25dff77e58c6de1870b6808c4a7",
+            .hash = "N-V-__8AABHMqAWYuRdIlflwi8gksPnlUMQBiSxAqQAAZFms",
+            .lazy = true,
+        },
+        .zemscripten = .{
+            .path = "../zemscripten",
+        },
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "examples",
+        "LICENSE",
+    },
+}

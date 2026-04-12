@@ -1,0 +1,20 @@
+.{
+    .name = .zengine,
+    .version = "0.0.0",
+    .fingerprint = 0x8c1eeb35fb7d3f90,
+    .minimum_zig_version = "0.15.2",
+    .dependencies = .{
+        .raylib_zig = .{
+            .path = "deps/raylib-zig",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "deps/raylib-zig",
+        "deps/zig-sti",
+        ".envrc",
+        "flake.nix",
+    },
+}
